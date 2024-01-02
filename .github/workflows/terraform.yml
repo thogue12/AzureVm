@@ -64,7 +64,7 @@ jobs:
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
       - name: Azure Login
-        uses: azure/login@v3
+        uses: azure/login@v1
         id: login
         env:
             AZURE_CLIENT_ID: '${{secrets.AZURE_CLIENT_ID}}'
