@@ -57,20 +57,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
-      - name: Azure Login
-        uses: azure/login@v1
-        id: login
-        env:
-            AZURE_CLIENT_ID: '${{secrets.AZURE_CLIENT_ID}}'
-            AZURE_CLIENT_SECRET: '${{secrets.AZURE_CLIENT_SECRET}}'
-            AZURE_SUBSCRIPTION_ID: '${{secrets.AZURE_SUBSCRIPTION_ID }}'
-            AZURE_TENANT_ID: '${{secrets.AZURE_TENANT_ID}}'
 
   terraform:
     name: Terraform
