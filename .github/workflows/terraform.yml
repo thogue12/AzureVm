@@ -69,6 +69,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
+      - name: Generate SSH Keys
+        run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa 
+
+      # Add the SSH private key to the SSH agent
+      - name: Add SSH private key to agent
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
       - name: Terraform Init
         id: init
         env:
