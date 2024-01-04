@@ -53,18 +53,13 @@ permissions:
   contents: read
 
 jobs:
-  your-job-name:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Azure CLI
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
   terraform:
     name: Terraform
+    env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -73,10 +68,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
+
       - name: Generate SSH Keys
         run: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 
@@ -85,21 +87,18 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
+
       - name: Terraform Init
         id: init
-        env:
-          AZURE_CLIENT_ID: '${{secrets.AZURE_CLIENT_ID}}'
-          AZURE_CLIENT_SECRET: '${{secrets.AZURE_CLIENT_SECRET}}'
-          AZURE_SUBSCRIPTION_ID: '${{secrets.AZURE_SUBSCRIPTION_ID}}'
-          AZURE_TENANT_ID: '${{secrets.AZURE_TENANT_ID}}'
         run: terraform init
+
       - name: Terraform Plan
         id: plan
-    
         if: github.event_name == 'push'
         run: terraform plan -no-color
+
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-       
         run: terraform apply -auto-approve
+
 
