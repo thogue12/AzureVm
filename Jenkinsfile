@@ -5,7 +5,8 @@ pipeline {
 
     stage("build") {
           steps {
-            echo 'building the application...'
+            terraform init
+            terraform plan
           }
       }
      stage("test") {
