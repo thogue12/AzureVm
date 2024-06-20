@@ -3,7 +3,6 @@ pipeline {
 
   stages {
 
-    stages {
     stage("Install Terraform") {
       steps {
         sh '''
@@ -23,23 +22,22 @@ pipeline {
       }
     }
 
-
     stage("terraform init") {
-          steps {
-            sh 'terraform init'
-            
-          }
+      steps {
+        sh 'terraform init'
       }
-     stage("test") {
-           steps {
-            echo 'testing the appplicatoin...'
-          }
-      }
+    }
 
-      stage("deploy") {
-           steps {
-            echo 'deploying the application...'
-          }
+    stage("test") {
+      steps {
+        echo 'testing the application...'
       }
+    }
+
+    stage("deploy") {
+      steps {
+        echo 'deploying the application...'
+      }
+    }
   }
 }
