@@ -1,3 +1,6 @@
+// i'm learning how to create a Jenkins pipeline
+// at the moment i have the very basic syntax later i will improve on it once I learn more
+
 pipeline {
   agent any
 
@@ -7,7 +10,7 @@ pipeline {
 
     stage("deploy") {
       steps {
-        sh 'terraform init'
+        echo 'terraform init'
       }
     }
 
